@@ -1,27 +1,60 @@
-import { OutputItem, TimeManager } from "./types";
-import { Scheduler } from './scheduler'
+import { EventBus, OutputItem, TimeManager } from './types';
+import { Scheduler } from './scheduler';
 
 export class ScheduleWorker {
   nextItem: OutputItem | null;
-  scheduler: Scheduler
-  timeManager: TimeManager
+  private scheduler: Scheduler;
+  private timeManager: TimeManager;
+  private timeoutObject: any;
+  private eventBus: EventBus;
 
-  constructor(scheduler: Scheduler, timeManager: TimeManager) {
+  constructor(scheduler: Scheduler, timeManager: TimeManager, bus: EventBus) {
     this.nextItem = null;
     this.scheduler = scheduler;
     this.timeManager = timeManager;
+    this.eventBus = bus;
   }
 
   private async _checkNext() {
     const next: OutputItem = await this.scheduler.next();
-    if (next == this.nextItem) {
-      return
+    if (
+      new Date(this.nextItem.scheduled_time) <= new Date(next.scheduled_time)
+    ) {
+      const sleepTime = this.timeManager.secondsUntil(
+        this.nextItem.scheduled_time,
+      );
+      this.sleep(sleepTime * 1000);
+    } else {
+      const sleepTime = this.timeManager.secondsUntil(next.scheduled_time);
+      this.nextItem = next;
+      this.sleep(sleepTime * 1000);
     }
-
   }
 
-  async checkNext() {
+  private sleep(until: number) {
+    this.timeoutObject = setTimeout(this.emitReminder, until);
+  }
+
+  private emitReminder() {
+    this.eventBus.emit('sendReminder', this.nextItem);
+  }
+
+  private cancelTimer() {
+    if (this.timeoutObject) {
+      clearTimeout(this.timeoutObject);
+    }
+  }
+
+  /**
+   * Cancel set object timer and restart the process of checking if an item has been added.
+   */
+  checkNext() {
+    this.cancelTimer();
     this._checkNext();
   }
 
+  start() {
+    this.scheduler.addListener('schedule:new', this.checkNext);
+    this.checkNext();
+  }
 }
