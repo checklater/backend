@@ -12,10 +12,22 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "app/*": [
+        "./src/app/*"
+      ],
+      "shared/*": [
+        "./src/shared/*"
+      ],
+      "core/*": [
+        "./src/core/*"
+      ]
+    },
+    "strict": true
   }
 }

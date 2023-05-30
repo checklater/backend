@@ -24,10 +24,14 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "date-fns": "^2.30.0",
     "eventemitter2": "^6.4.9",
+    "jest-mock-extended": "^3.0.4",
+    "luxon": "^3.3.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -35,6 +39,7 @@
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
+    "@types/luxon": "^3.3.0",
     "@types/node": "^16.0.0",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -58,6 +63,11 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^app/(.*)": "<rootDir>/app/$1",
+      "^core/(.*)": "<rootDir>/core/$1",
+      "^shared/(.*)": "<rootDir>/shared/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

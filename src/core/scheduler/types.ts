@@ -1,42 +1,42 @@
 export interface DBGateway {
-  save(item: OutputItem): Promise<OutputItem>;
-  findNext(): Promise<OutputItem | null>;
-  findWithId(id: string): Promise<OutputItem | null>;
+  save(item: Event): Promise<Event>;
+  findNext(): Promise<Event | null>;
+  findWithId(id: string): Promise<Event | null>;
 }
 
-export type InputItem = {
+export type Item = {
   url: string;
   requested_on: string | Date;
 };
 
-export type OutputItem = InputItem & {
+export type Event = Item & {
   id: string;
   scheduled_time: string | Date;
 };
 
-type Time = string | Date;
+type DateTime = string;
 
 export interface TimeManager {
   /**
    * Give a time, return the next best time in a given day when a reminder should be sent to a user, factoring time offsets.
    * @param T - Time to derive the next best time from.
-   * @returns {Time} - Next best time to shedule a reminder.
+   * @returns {DateTime} - Next best time to shedule a reminder.
    */
-  nextBestTime(T: Time): Time;
+  nextBestTime(T: DateTime): Date;
 
   /**
    * Given a time in the future, return number of minutes until time is reached.
-   * @param {Time} T
+   * @param {DateTime} T
    * @returns {number}
    */
-  minutesUntil(T: Time): number;
+  minutesUntil(T: DateTime): number;
 
   /**
    * Given a time in the future, return number of seconds until time is reached.
-   * @param {Time} T
+   * @param {DateTime} T
    * @returns {number}
    */
-  secondsUntil(T: Time): number;
+  secondsUntil(T: DateTime): number;
 }
 
 export interface EventBus {

@@ -1,18 +1,19 @@
-import EventEmitter2 from "eventemitter2";
-import { DBGateway, InputItem, OutputItem, TimeManager } from "./types";
+import { EventEmitter } from "events";
 
-export class Scheduler extends EventEmitter2 {
+import { DBGateway, Item, Event, TimeManager } from "./types";
+
+export class Scheduler extends EventEmitter {
   private db: DBGateway;
 
   constructor(db: DBGateway) {
-    super()
+    super();
     this.db = db;
   }
 
-  async schedule(item: InputItem, timeManager: TimeManager): Promise<void> {
+  async schedule(item: Item, timeManager: TimeManager): Promise<void> {
     const reminderTime = timeManager.nextBestTime(item.requested_on);
     const itemId = await this.generateId()
-    const outputItem: OutputItem = {
+    const outputItem: Event = {
       id: itemId,
       scheduled_time: reminderTime,
       ...item
@@ -21,7 +22,8 @@ export class Scheduler extends EventEmitter2 {
     this.db.save(outputItem);
     this.emit("schedule:new")
   }
-  async next(): Promise<OutputItem | null> {
+
+  async next(): Promise<Event | null> {
     return this.db.findNext()
   }
 

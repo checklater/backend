@@ -1,8 +1,8 @@
-import { EventBus, OutputItem, TimeManager } from './types';
+import { EventBus, Event, TimeManager } from './types';
 import { Scheduler } from './scheduler';
 
 export class ScheduleWorker {
-  nextItem: OutputItem | null;
+  nextItem: Event | null;
   private scheduler: Scheduler;
   private timeManager: TimeManager;
   private timeoutObject: any;
@@ -16,7 +16,20 @@ export class ScheduleWorker {
   }
 
   private async _checkNext() {
-    const next: OutputItem = await this.scheduler.next();
+    const next = await this.scheduler.next();
+    if (!next) {
+      return
+    }
+
+    if (!this.nextItem) {
+      this.nextItem = next
+      const sleepTime = this.timeManager.secondsUntil(
+        this.nextItem.scheduled_time,
+      );
+      this.sleep(sleepTime * 1000);
+      return
+    }
+
     if (
       new Date(this.nextItem.scheduled_time) <= new Date(next.scheduled_time)
     ) {
@@ -37,6 +50,8 @@ export class ScheduleWorker {
 
   private emitReminder() {
     this.eventBus.emit('sendReminder', this.nextItem);
+    this.nextItem = null
+    this.checkNext()
   }
 
   private cancelTimer() {
