@@ -6,15 +6,13 @@ export interface DBGateway {
 
 export type Item = {
   url: string;
-  requested_on: string | Date;
+  requested_on: string;
 };
 
 export type Event = Item & {
   id: string;
-  scheduled_time: string | Date;
+  scheduled_time: Date;
 };
-
-type DateTime = string;
 
 export interface TimeManager {
   /**
@@ -22,21 +20,21 @@ export interface TimeManager {
    * @param T - Time to derive the next best time from.
    * @returns {DateTime} - Next best time to shedule a reminder.
    */
-  nextBestTime(T: DateTime): Date;
+  nextBestTime(T: string): Date;
 
   /**
    * Given a time in the future, return number of minutes until time is reached.
-   * @param {DateTime} T
-   * @returns {number}
+   * @param T
+   * @returns minutes until T
    */
-  minutesUntil(T: DateTime): number;
+  minutesUntil(T: Date): number;
 
   /**
    * Given a time in the future, return number of seconds until time is reached.
-   * @param {DateTime} T
-   * @returns {number}
+   * @param T
+   * @returns seconds until T
    */
-  secondsUntil(T: DateTime): number;
+  secondsUntil(T: Date): number;
 }
 
 export interface EventBus {

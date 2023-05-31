@@ -2,24 +2,22 @@ import { z } from 'zod'
 import { DateTime } from "luxon";
 import { differenceInMinutes, differenceInSeconds } from 'date-fns';
 
-type Time = string;
-
 export class TimeManager {
 
   /**
    * minutes until specified time
    */
-  secondsUntil(time: Time): number {
-    z.string().datetime().parse(time)
-    return differenceInSeconds(new Date(time), new Date())
+  secondsUntil(date: Date): number {
+    z.string().datetime().parse(date)
+    return differenceInSeconds(new Date(date), new Date())
   }
 
   /**
    * Minutes until specified time
    */
-  minutesUntil(time: Time): number {
-    z.string().datetime().parse(time)
-    return differenceInMinutes(new Date(time), new Date())
+  minutesUntil(date: Date): number {
+    z.string().datetime().parse(date)
+    return differenceInMinutes(new Date(date), new Date())
   }
 
 
@@ -27,9 +25,14 @@ export class TimeManager {
   * Given a Date instance or a valid date string, calculate and return the optimal
   * the next best optimal time to schedule notification for an item based on generic timing calculation.
   * If It's already past time to send notification for the day then it'll be sent the following day.
+  * Factors timezone if offsets is included in time string.
+  *
+  * @param {string} time Datetime string of relative time from where next best time should be calculated.
+  *
+  * @returns {Date} Next best time to send notification
   *
   */
-  nextBestTime(time: Time): Date {
+  nextBestTime(time: string): Date {
     z.string().datetime({ offset: true }).parse(time);
 
     const datetime = DateTime.fromISO(time);
