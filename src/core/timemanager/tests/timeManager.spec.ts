@@ -1,8 +1,8 @@
-import { TimeManager } from "../manager"
+import { GenericTimeManager } from "../generic.manager"
 
 describe("Time manager", () => {
 
-  const manager = new TimeManager()
+  const manager = new GenericTimeManager()
 
   it("Return new day if night", () => {
     const date = '2023-06-01T23:00:00+01:00'

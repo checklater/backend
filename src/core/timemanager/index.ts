@@ -1,1 +1,2 @@
-export { TimeManager } from './manager';
+export { BaseTimeManager } from './manager';
+export { GenericTimeManager } from './generic.manager'

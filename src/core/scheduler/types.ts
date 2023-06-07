@@ -1,7 +1,7 @@
 export interface DBGateway {
   save(item: Event): Promise<Event>;
   findNext(): Promise<Event | null>;
-  findWithId(id: string): Promise<Event | null>;
+  findWithId(id: string): Promise<Event>;
 }
 
 export type Item = {
