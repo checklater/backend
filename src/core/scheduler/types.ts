@@ -10,7 +10,6 @@ export type Item = {
 };
 
 export type Event = Item & {
-  id: string;
   scheduled_time: Date;
 };
 

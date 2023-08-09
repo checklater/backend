@@ -24,6 +24,9 @@
       "shared/*": [
         "./src/shared/*"
       ],
+      "infra/*": [
+        "./src/shared/*"
+      ],
       "core/*": [
         "./src/core/*"
       ]
